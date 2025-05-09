@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: central_news-django
+    env: python
+    plan: free
+    buildCommand: ""
+    startCommand: gunicorn newsaxis.wsgi:application
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: newsaxis.settings
+      - key: PYTHON_VERSION
+        value: 3.10

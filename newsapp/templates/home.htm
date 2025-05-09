@@ -1,0 +1,775 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>NewsAxis - Centralized News Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #fff7f0;
+            color: #333;
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+
+        .header.scrolled {
+            transform: translateY(-10px);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .header-logo {
+            width: 60px;
+            height: 60px;
+            margin-right: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .header-logo:hover {
+            transform: scale(1.1);
+        }
+
+        .navbar-brand {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            transition: color 0.3s ease;
+        }
+
+        .navbar-brand:hover {
+            color: #fff2e6;
+        }
+
+        /* Dropdown Styles */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-toggle {
+            background: linear-gradient(45deg, #ffca28, #ffb300);
+            border: none;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 500;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .dropdown-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: linear-gradient(135deg, #ffca28, #ffb300);
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            display: none;
+            min-width: 180px;
+            z-index: 1000;
+            animation: slideDown 0.3s ease-in-out;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 12px 20px;
+            text-decoration: none;
+            color: white;
+            font-weight: 400;
+            transition: background 0.3s ease, padding-left 0.3s ease;
+        }
+
+        .dropdown-menu a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            padding-left: 25px;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Button Styles */
+        .btn-container {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+            border: none;
+            color: white;
+            font-size: 1rem;
+            font-weight: 500;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #ff7e5f, #feb47b);
+        }
+
+        .btn-outline-light {
+            background: transparent;
+            border: 1px solid #ffffff;
+            color: white;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .btn-outline-light:hover {
+            background: #ffffff;
+            color: #ff7e5f;
+        }
+
+        .btn-bookmark {
+            background: linear-gradient(45deg, #ffca28, #ffb300);
+            color: white;
+            font-size: 0.9rem;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn-bookmark:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Carousel Styles */
+        .carousel-img-wrapper {
+            height: 400px;
+            overflow: hidden;
+            border-radius: 12px;
+            transition: transform 0.5s ease;
+        }
+
+        .carousel-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+            transition: transform 0.5s ease;
+        }
+
+        .carousel-item:hover .carousel-img-wrapper img {
+            transform: scale(1.05);
+        }
+
+        .carousel-caption {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 8px;
+            padding: 20px;
+            transform: translateY(10px);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .carousel-item:hover .carousel-caption {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #ffffff, #fff7f0);
+            padding: 60px 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #ff7e5f;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .lead {
+            font-size: 1.2rem;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        /* News Cards */
+        .news-card {
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .news-card img {
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .news-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .card-text {
+            font-size: 0.95rem;
+            color: #666;
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
+            padding: 30px 0;
+            color: white;
+            text-align: center;
+        }
+
+        .footer p {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        /* Modal */
+        .modal-content {
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            animation: fadeInModal 0.3s ease-in-out;
+        }
+
+        @keyframes fadeInModal {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-header {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .modal-title {
+            font-weight: 600;
+            color: #ff7e5f;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #ff7e5f;
+            box-shadow: 0 0 8px rgba(255, 126, 95, 0.2);
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn hull {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <img src="{% static 'images/logo.png' %}" alt="Logo" class="header-logo"/>
+            <a class="navbar-brand" href="#">NewsAxis</a>
+        </div>
+        <div class="btn-container">
+            <div class="dropdown">
+                <button class="dropdown-toggle btn">Categories</button>
+                <div class="dropdown-menu">
+                    <a href="{% url 'category_news' 'politics' %}">Politics</a>
+                    <a href="{% url 'category_news' 'technology' %}">Technology</a>
+                    <a href="{% url 'category_news' 'health' %}">Health</a>
+                    <a href="{% url 'category_news' 'business' %}">Business</a>
+                    <a href="{% url 'category_news' 'sports' %}">Sports</a>
+                    <a href="{% url 'category_news' 'entertainment' %}">Entertainment</a>
+                </div>
+            </div>
+            <button onclick="getLocation()" class="btn">Nearby News</button>
+            <button onclick="startVoice()" class="btn">Ask Me</button>
+            <a href="{% url 'country_list' %}" class="btn">Explore</a>
+            <!-- Login/Signup Button -->
+            <button class="btn btn-primary" id="login-btn" data-bs-toggle="modal" data-bs-target="#authModal">Login/Signup</button>
+            <!-- My Account Dropdown -->
+            <div class="dropdown" id="account-dropdown" style="display: none;">
+                <button class="dropdown-toggle btn" id="account-btn">My Account</button>
+                <div class="dropdown-menu">
+                    <a href="{% url 'user_articles' %}">Your Articles</a>
+                    <a href="{% url 'bookmarks' %}">Bookmarked</a>
+                    <a href="#" id="logout-link">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Carousel Section -->
+    <div id="newsCarousel" class="carousel slide mt-4 container fade-in" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            {% for news in trending_news %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <div class="carousel-img-wrapper">
+                    <img src="{{ news.image|default_if_none:'#' }}" 
+                         onerror="this.onerror=null;this.src='{% static 'images/logo.png' %}';" 
+                         class="card-img-top" alt="News Image">
+                </div>
+                <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-3">
+                    <h5>{{ news.title }}</h5>
+                    <p>{{ news.description|slice:":100" }}...</p>
+                    <div class="d-flex gap-2">
+                        <a href="{{ news.url }}" target="_blank" class="btn btn-sm btn-primary">Read More</a>
+                        <button class="btn btn-bookmark bookmark-btn" style="display: none;" 
+                                data-title="{{ news.title }}" 
+                                data-description="{{ news.description|slice:':100' }}" 
+                                data-image="{{ news.image|default_if_none:'#' }}" 
+                                data-url="{{ news.url }}">Bookmark</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#newsCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#newsCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+    </div>
+
+    <!-- Hero Section -->
+    <div class="hero-section container mt-5 text-center fade-in">
+        <h2 class="section-title">Stay Informed. Stay Ahead.</h2>
+        <p class="lead">Centralized, Real-Time News from Around the World — All in One Place.</p>
+        <div class="mt-4">
+            <a href="{% url 'country_list' %}" class="btn btn-primary btn-lg m-2">🌍 Explore Country News</a>
+            <a href="{% url 'college_news' %}" class="btn btn-success btn-lg m-2">🎓 Explore College News</a>
+        </div>
+    </div>
+
+    <!-- Trending Cards -->
+    <div class="container mt-5 fade-in">
+        <h2 class="section-title">📰 More Trending News</h2>
+        <div class="row">
+            {% for news in trending_news %}
+            <div class="col-md-4 mb-4">
+                <div class="card news-card">
+                    <img src="{{ news.image|default_if_none:'#' }}" 
+                         onerror="this.onerror=null;this.src='{% static 'images/logo.png' %}';" 
+                         class="card-img-top" alt="News Image">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ news.title }}</h5>
+                        <p class="card-text">{{ news.description|slice:":100" }}...</p>
+                        <div class="d-flex gap-2">
+                            <a href="{{ news.url }}" target="_blank" class="btn btn-outline-primary btn-sm">Read More</a>
+                            <button class="btn btn-bookmark bookmark-btn" style="display: none;" 
+                                    data-title="{{ news.title }}" 
+                                    data-description="{{ news.description|slice:':100' }}" 
+                                    data-image="{{ news.image|default_if_none:'#' }}" 
+                                    data-url="{{ news.url }}">Bookmark</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer mt-5 py-3 text-center">
+        <p>© 2025 NewsAxis. All rights reserved.</p>
+    </div>
+
+    <!-- Auth Modal -->
+    <div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-4">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="authModalLabel">Login</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="auth-form">
+                        <div class="mb-3">
+                            <label for="auth-email" class="form-label">Email address</label>
+                            <input type="email" class="form-control" id="auth-email" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="auth-password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="auth-password" required />
+                            <div id="auth-error-msg" class="text-danger mt-2 small"></div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100" id="auth-submit-btn">Login</button>
+                    </form>
+                    <p class="text-center mt-3" id="auth-toggle-text">
+                        New user? <a href="#" id="toggle-auth-mode">Signup</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="{% static 'js/firebase_config.js' %}"></script>
+    <script src="{% static 'js/auth.js' %}"></script>
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(sendLocationToServer, handleLocationError);
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        function sendLocationToServer(position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            window.location.href = `/nearby-news/?lat=${lat}&lon=${lon}`;
+        }
+
+        function handleLocationError(error) {
+            alert("Unable to retrieve your location. Please check browser permissions.");
+        }
+
+        // Firebase Auth UI Changes
+        firebase.auth().onAuthStateChanged(user => {
+            const loginBtn = document.getElementById('login-btn');
+            const accountDropdown = document.getElementById('account-dropdown');
+            const logoutLink = document.getElementById('logout-link');
+            const bookmarkButtons = document.querySelectorAll('.bookmark-btn');
+
+            if (user) {
+                if (loginBtn) loginBtn.style.display = 'none';
+                if (accountDropdown) accountDropdown.style.display = 'inline-block';
+                bookmarkButtons.forEach(btn => btn.style.display = 'inline-block');
+
+                if (logoutLink) {
+                    logoutLink.onclick = () => {
+                        firebase.auth().signOut().then(() => {
+                            location.reload(); // Refresh after logout
+                        });
+                    };
+                }
+            } else {
+                if (loginBtn) loginBtn.style.display = 'inline-block';
+                if (accountDropdown) accountDropdown.style.display = 'none';
+                bookmarkButtons.forEach(btn => btn.style.display = 'none');
+            }
+        });
+
+        // Bookmark Functionality
+        document.querySelectorAll('.bookmark-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const user = firebase.auth().currentUser;
+                if (!user) {
+                    alert("Please log in to bookmark articles.");
+                    return;
+                }
+
+                const title = button.dataset.title;
+                const description = button.dataset.description;
+                const image = button.dataset.image;
+                const url = button.dataset.url;
+
+                // Initialize Firestore
+                const db = firebase.firestore();
+
+                // Store bookmark in Firestore under user's UID
+                db.collection('bookmarks')
+                    .doc(user.uid)
+                    .collection('articles')
+                    .add({
+                        title: title,
+                        description: description,
+                        image: image,
+                        url: url,
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    })
+                    .then(() => {
+                        alert("Article bookmarked successfully!");
+                        button.disabled = true; // Prevent multiple bookmarks
+                        button.textContent = "Bookmarked";
+                    })
+                    .catch(error => {
+                        console.error("Error bookmarking article: ", error);
+                        alert("Failed to bookmark article: " + error.message);
+                    });
+            });
+        });
+
+        // Auth JS
+        let isSignup = false;
+
+        document.getElementById('toggle-auth-mode').addEventListener('click', function (e) {
+            e.preventDefault();
+            isSignup = !isSignup;
+
+            document.getElementById('authModalLabel').innerText = isSignup ? "Signup" : "Login";
+            document.getElementById('auth-submit-btn').innerText = isSignup ? "Signup" : "Login";
+            document.getElementById('auth-error-msg').textContent = '';  // Clear old messages
+
+            this.innerHTML = isSignup
+                ? ' <a href="#">Login</a>'
+                : ' <a href="#">Signup</a>';
+        });
+
+        document.getElementById('auth-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const email = document.getElementById('auth-email').value.trim();
+            const password = document.getElementById('auth-password').value.trim();
+            const errorMsg = document.getElementById('auth-error-msg');
+            errorMsg.textContent = '';
+
+            const auth = firebase.auth();
+
+            const successHandler = () => {
+                const modal = bootstrap.Modal.getInstance(document.getElementById('authModal'));
+                modal.hide();
+                location.reload();
+            };
+
+            const errorHandler = (error) => {
+                switch (error.code) {
+                    case 'auth/user-not-found':
+                        errorMsg.textContent = "❌ Account not registered. Please signup.";
+                        break;
+                    case 'auth/wrong-password':
+                    case 'auth/invalid-login-credentials':
+                        errorMsg.textContent = "❌ Incorrect password.";
+                        break;
+                    case 'auth/email-already-in-use':
+                        errorMsg.textContent = "❌ Email already registered. Please login.";
+                        break;
+                    case 'auth/invalid-email':
+                        errorMsg.textContent = "❌ Invalid email format.";
+                        break;
+                    case 'auth/weak-password':
+                        errorMsg.textContent = "❌ Password should be at least 6 characters.";
+                        break;
+                    default:
+                        errorMsg.textContent = "❌ " + error.message;
+                }
+            };
+
+            if (isSignup) {
+                auth.createUserWithEmailAndPassword(email, password)
+                    .then(successHandler)
+                    .catch(errorHandler);
+            } else {
+                auth.signInWithEmailAndPassword(email, password)
+                    .then(successHandler)
+                    .catch(errorHandler);
+            }
+        });
+
+        // Add scroll effect to header
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+    </script>
+    <script>
+        function startVoice() {
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'en-US';
+        
+            recognition.onresult = function(event) {
+                const query = event.results[0][0].transcript.toLowerCase();
+                console.log("You said:", query);
+        
+                if (query.includes("college news") || query.includes("eshwar")) {
+                    fetch('/college-news-json/')
+                    .then(res => res.json())
+                    .then(data => {
+                      if (data.length === 0) {
+                        speakNews("Sorry, there are no latest updates from Eshwar right now.");
+                      } else {
+                        const headlines = data.slice(0, 3).map(d => d.text.replace(/https?:\/\/\S+/g, '')).join('. ');
+                        speakNews("Here are the latest updates from Eshwar: " + headlines);
+                      }
+                    });
+                } else if (query.includes("news")) {
+                    fetch('/general_news_json/')  // You should expose this endpoint if not already
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.length === 0) {
+                                speakNews("Sorry, no general news is available right now.");
+                                return;
+                            }
+                            const headlines = data.slice(0, 3).map(d => d.text).join('. ');
+                            speakNews("Here are the latest updates from Eshwar: " + headlines);                        });
+                } else {
+                    speakNews("Please say 'news' or 'college news' to hear updates.");
+                }
+            };
+        
+            recognition.onerror = function(event) {
+                speakNews("Sorry, I couldn't hear you. Please try again.");
+            };
+        
+            recognition.start();
+        }
+        function speakNews(text) {
+            const synth = window.speechSynthesis;
+            const utterance = new SpeechSynthesisUtterance(text);
+            synth.speak(utterance);
+        }
+        </script>
+        <script>
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.lang = 'en-US';
+            
+            function speak(text) {
+                const synth = window.speechSynthesis;
+                const utterance = new SpeechSynthesisUtterance(text);
+                synth.speak(utterance);
+            }
+            
+            function fetchAndSpeakCollegeNews() {
+                fetch('/college-news-json/')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.length === 0) {
+                            speak("Sorry, I couldn't find any college news.");
+                            return;
+                        }
+            
+                        const intro = "Here are the latest updates from Eshwar.";
+                        const newsList = data.map((title, index) => `News ${index + 1}: ${title}`).join(". ");
+                        speak(`${intro} ${newsList}`);
+                    })
+                    .catch(error => {
+                        console.error("Error fetching college news:", error);
+                        speak("Sorry, I couldn't fetch the college news.");
+                    });
+            }
+            
+            function fetchAndSpeakGeneralNews() {
+                fetch('/general-news-json/')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.length === 0) {
+                            speak("Sorry, I couldn't find any general news.");
+                            return;
+                        }
+            
+                        const intro = "Here are the latest headlines.";
+                        const newsList = data.map((item, index) => `News ${index + 1}: ${item.text}`).join(". ");
+                        speak(`${intro} ${newsList}`);
+                    })
+                    .catch(error => {
+                        console.error("Error fetching general news:", error);
+                        speak("Sorry, I couldn't fetch the general news.");
+                    });
+            }
+            
+            // Start recognition
+            function startListening() {
+                recognition.start();
+                speak("Listening. Say 'college news' or 'news' to get updates.");
+            }
+            
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript.toLowerCase();
+                console.log("You said:", transcript);
+            
+                if (transcript.includes("college news")) {
+                    fetchAndSpeakCollegeNews();
+                } else if (transcript.includes("news")) {
+                    fetchAndSpeakGeneralNews();
+                } else {
+                    speak("Sorry, I didn't understand. Please say college news or general news.");
+                }
+            };
+            
+            recognition.onerror = (event) => {
+                console.error("Speech recognition error:", event.error);
+                speak("There was an error recognizing your speech.");
+            };
+            </script>
+            
+</body>
+</html>

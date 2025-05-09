@@ -1,0 +1,551 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose a Country - NewsAxis</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #fff7f0;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+        .header.scrolled {
+            transform: translateY(-10px);
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+        .header-logo {
+            width: 60px;
+            height: 60px;
+            margin-right: 20px;
+            transition: transform 0.3s ease;
+        }
+        .header-logo:hover {
+            transform: scale(1.1);
+        }
+        .navbar-brand {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            transition: color 0.3s ease;
+        }
+        .navbar-brand:hover {
+            color: #fff2e6;
+        }
+        .dropdown {
+            position: relative;
+        }
+        .dropdown-toggle {
+            background: linear-gradient(45deg, #ffca28, #ffb300);
+            border: none;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 500;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .dropdown-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .dropdown-menu {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: linear-gradient(135deg, #ffca28, #ffb300);
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            display: none;
+            min-width: 180px;
+            z-index: 1000;
+            animation: slideDown 0.3s ease-in-out;
+        }
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+        .dropdown-menu a {
+            display: block;
+            padding: 12px 20px;
+            text-decoration: none;
+            color: white;
+            font-weight: 400;
+            transition: background 0.3s ease, padding-left 0.3s ease;
+        }
+        .dropdown-menu a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            padding-left: 25px;
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .btn-container {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        .btn {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+            border: none;
+            color: white;
+            font-size: 1rem;
+            font-weight: 500;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .btn-primary {
+            background: linear-gradient(45deg, #ff7e5f, #feb47b);
+        }
+        .back-button {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin: 20px 0;
+            display: inline-flex;
+            align-items: center;
+        }
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .country-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #ffffff;
+            color: #333;
+            padding: 15px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin: 10px;
+        }
+        .country-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        .country-card {
+            width: 160px;
+            margin: 10px;
+            text-align: center;
+        }
+        .country-card img {
+            width: 48px;
+            height: 36px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #ff7e5f;
+            margin: 40px 0;
+            position: relative;
+        }
+        h1::after {
+            content: '';
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        #countrySearch {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto 30px;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        #countrySearch:focus {
+            border-color: #ff7e5f;
+            box-shadow: 0 0 8px rgba(255, 126, 95, 0.2);
+            outline: none;
+        }
+        #countryList {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+        .footer {
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
+            padding: 30px 0;
+            color: white;
+            text-align: center;
+            margin-top: 40px;
+        }
+        .footer p {
+            margin: 0;
+            font-size: 1rem;
+        }
+        .modal-content {
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            animation: fadeInModal 0.3s ease-in-out;
+        }
+        @keyframes fadeInModal {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .modal-header {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        .modal-title {
+            font-weight: 600;
+            color: #ff7e5f;
+        }
+        .form-control {
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .form-control:focus {
+            border-color: #ff7e5f;
+            box-shadow: 0 0 8px rgba(255, 126, 95, 0.2);
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <img src="{% static 'images/logo.png' %}" alt="Logo" class="header-logo">
+            <a class="navbar-brand" href="{% url 'home' %}">NewsAxis</a>
+        </div>
+        <div class="btn-container">
+            <div class="dropdown">
+                <button class="dropdown-toggle btn">Categories</button>
+                <div class="dropdown-menu">
+                    <a href="{% url 'category_news' 'politics' %}">Politics</a>
+                    <a href="{% url 'category_news' 'technology' %}">Technology</a>
+                    <a href="{% url 'category_news' 'health' %}">Health</a>
+                    <a href="{% url 'category_news' 'business' %}">Business</a>
+                    <a href="{% url 'category_news' 'sports' %}">Sports</a>
+                    <a href="{% url 'category_news' 'entertainment' %}">Entertainment</a>
+                </div>
+            </div>
+            <button onclick="getLocation()" class="btn">📍 Nearby News</button>
+            <a href="{% url 'country_list' %}" class="btn">Explore</a>
+            <button class="btn btn-primary" id="login-btn" data-bs-toggle="modal" data-bs-target="#authModal">Login/Signup</button>
+            <div class="dropdown" id="account-dropdown" style="display: none;">
+                <button class="dropdown-toggle btn" id="account-btn">My Account</button>
+                <div class="dropdown-menu">
+                    <a href="{% url 'user_articles' %}">Your Articles</a>
+                    <a href="{% url 'bookmarks' %}">Bookmarked</a>
+                    <a href="#" id="logout-link">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container fade-in">
+        <a href="{% url 'home' %}" class="back-button">← Back to Home</a>
+        <h1>🌍 Choose a Country to See News</h1>
+
+        <!-- Search Bar -->
+        <input type="text" id="countrySearch" class="form-control" placeholder="Search for a country...">
+
+        <!-- Country List -->
+        <div id="countryList">
+            {% for code, name in countries.items %}
+                <div class="country-card">
+                    <a href="{% url 'country_news' code %}" class="country-button">
+                        <img src="https://flagcdn.com/48x36/{{ code }}.png" alt="{{ name }} flag">
+                        {{ name }}
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-4">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="authModalLabel">Login</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="auth-form">
+                        <div class="mb-3">
+                            <label for="auth-email" class="form-label">Email address</label>
+                            <input type="email" class="form-control" id="auth-email" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="auth-password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="auth-password" required />
+                            <div id="auth-error-msg" class="text-danger mt-2 small"></div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100" id="auth-submit-btn">Login</button>
+                    </form>
+                    <p class="text-center mt-3" id="auth-toggle-text">
+                        New user? <a href="#" id="toggle-auth-mode">Signup</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>© 2025 NewsAxis. All rights reserved.</p>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/firebase_config.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log("Country List: DOM loaded");
+
+            // Firebase Auth UI Changes
+            try {
+                firebase.auth().onAuthStateChanged(user => {
+                    console.log("Country List: onAuthStateChanged fired", user ? "User logged in: " + user.uid : "No user");
+                    const loginBtn = document.getElementById('login-btn');
+                    const accountDropdown = document.getElementById('account-dropdown');
+                    const logoutLink = document.getElementById('logout-link');
+
+                    if (user) {
+                        // Store Firebase token in session via AJAX
+                        user.getIdToken().then(token => {
+                            console.log("Country List: Sending Firebase token to server");
+                            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+                            if (!csrfToken) {
+                                console.error("Country List: CSRF token not found");
+                                return;
+                            }
+                            fetch('/set-firebase-token/', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': csrfToken.value
+                                },
+                                body: JSON.stringify({ firebase_token: token })
+                            }).catch(error => {
+                                console.error("Country List: Error storing Firebase token:", error);
+                            });
+                        }).catch(error => {
+                            console.error("Country List: Error getting Firebase token:", error);
+                        });
+
+                        if (loginBtn) loginBtn.style.display = 'none';
+                        if (accountDropdown) accountDropdown.style.display = 'inline-block';
+
+                        if (logoutLink) {
+                            logoutLink.onclick = () => {
+                                firebase.auth().signOut().then(() => {
+                                    console.log("Country List: User logged out");
+                                    location.reload();
+                                }).catch(error => {
+                                    console.error("Country List: Logout error:", error);
+                                    alert("Failed to log out: " + error.message);
+                                });
+                            };
+                        }
+                    } else {
+                        if (loginBtn) loginBtn.style.display = 'inline-block';
+                        if (accountDropdown) accountDropdown.style.display = 'none';
+                    }
+                });
+            } catch (error) {
+                console.error("Country List: Auth initialization error:", error);
+            }
+
+            // Auth Modal Handling
+            try {
+                let isSignup = false;
+
+                document.getElementById('toggle-auth-mode').addEventListener('click', function (e) {
+                    e.preventDefault();
+                    isSignup = !isSignup;
+
+                    document.getElementById('authModalLabel').innerText = isSignup ? "Signup" : "Login";
+                    document.getElementById('auth-submit-btn').innerText = isSignup ? "Signup" : "Login";
+                    document.getElementById('auth-error-msg').textContent = '';
+
+                    this.innerHTML = isSignup
+                        ? ' <a href="#">Login</a>'
+                        : ' <a href="#">Signup</a>';
+                });
+
+                document.getElementById('auth-form').addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    const email = document.getElementById('auth-email').value.trim();
+                    const password = document.getElementById('auth-password').value.trim();
+                    const errorMsg = document.getElementById('auth-error-msg');
+                    errorMsg.textContent = '';
+
+                    const auth = firebase.auth();
+
+                    const successHandler = () => {
+                        console.log("Country List: Auth successful");
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('authModal'));
+                        modal.hide();
+                        location.reload();
+                    };
+
+                    const errorHandler = (error) => {
+                        console.error("Country List: Auth error:", error);
+                        switch (error.code) {
+                            case 'auth/user-not-found':
+                                errorMsg.textContent = "❌ Account not registered. Please signup.";
+                                break;
+                            case 'auth/wrong-password':
+                            case 'auth/invalid-login-credentials':
+                                errorMsg.textContent = "❌ Incorrect password.";
+                                break;
+                            case 'auth/email-already-in-use':
+                                errorMsg.textContent = "❌ Email already registered. Please login.";
+                                break;
+                            case 'auth/invalid-email':
+                                errorMsg.textContent = "❌ Invalid email format.";
+                                break;
+                            case 'auth/weak-password':
+                                errorMsg.textContent = "❌ Password should be at least 6 characters.";
+                                break;
+                            default:
+                                errorMsg.textContent = "❌ " + error.message;
+                        }
+                    };
+
+                    if (isSignup) {
+                        auth.createUserWithEmailAndPassword(email, password)
+                            .then(successHandler)
+                            .catch(errorHandler);
+                    } else {
+                        auth.signInWithEmailAndPassword(email, password)
+                            .then(successHandler)
+                            .catch(errorHandler);
+                    }
+                });
+            } catch (error) {
+                console.error("Country List: Auth modal initialization error:", error);
+            }
+
+            // Search Functionality
+            try {
+                const searchInput = document.getElementById("countrySearch");
+                const countryCards = document.querySelectorAll(".country-card");
+
+                searchInput.addEventListener("keyup", function () {
+                    const filter = this.value.toLowerCase();
+                    countryCards.forEach(card => {
+                        const text = card.textContent.toLowerCase();
+                        card.style.display = text.includes(filter) ? "inline-block" : "none";
+                    });
+                });
+
+                window.onload = function() {
+                    searchInput.focus();
+                };
+            } catch (error) {
+                console.error("Country List: Search initialization error:", error);
+            }
+
+            // Header Scroll Effect
+            try {
+                window.addEventListener('scroll', () => {
+                    const header = document.querySelector('.header');
+                    if (window.scrollY > 50) {
+                        header.classList.add('scrolled');
+                    } else {
+                        header.classList.remove('scrolled');
+                    }
+                });
+            } catch (error) {
+                console.error("Country List: Header scroll effect error:", error);
+            }
+
+            // Geolocation for Nearby News
+            function getLocation() {
+                try {
+                    console.log("Country List: getLocation called");
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(
+                            position => {
+                                const lat = position.coords.latitude;
+                                const lon = position.coords.longitude;
+                                console.log(`Country List: Geolocation success: lat=${lat}, lon=${lon}`);
+                                window.location.href = `/nearby-news/?lat=${lat}&lon=${lon}`;
+                            },
+                            error => {
+                                console.error("Country List: Geolocation error:", error.message);
+                                alert("Unable to retrieve your location. Please check browser permissions.");
+                            }
+                        );
+                    } else {
+                        console.error("Country List: Geolocation not supported");
+                        alert("Geolocation is not supported by this browser.");
+                    }
+                } catch (error) {
+                    console.error("Country List: Geolocation function error:", error);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
