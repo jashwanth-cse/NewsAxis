@@ -88,33 +88,38 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
-        .dropdown-menu {
+       .dropdown-menu {
             position: absolute;
             right: 0;
             top: 100%;
-            background: linear-gradient(135deg, #ffca28, #ffb300);
-            color: white;
+            background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+            color: #ffffff;
             border-radius: 8px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
             display: none;
             min-width: 180px;
             z-index: 1000;
             animation: slideDown 0.3s ease-in-out;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
+
         .dropdown:hover .dropdown-menu {
             display: block;
         }
+
         .dropdown-menu a {
             display: block;
             padding: 12px 20px;
             text-decoration: none;
-            color: white;
+            color: #ffffff;
             font-weight: 400;
-            transition: background 0.3s ease, padding-left 0.3s ease;
+            transition: background 0.3s ease, padding-left 0.3s ease, color 0.3s ease;
         }
+
         .dropdown-menu a:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.2);
             padding-left: 25px;
+            color: #fff2e6;
         }
         @keyframes slideDown {
             from { opacity: 0; transform: translateY(-10px); }
@@ -143,8 +148,6 @@
         .btn-primary {
             background: linear-gradient(45deg, #ff7e5f, #feb47b);
             color: white;
-            border: none;
-            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
         }
         .btn-primary:hover {
             background: linear-gradient(45deg, #ff6b6b, #ff8e53);
@@ -154,7 +157,7 @@
         }
         .btn-outline-primary {
             border-color: #ff7e5f;
-            color: #ff7e5f;
+            color: white;
             background: transparent;
             border-width: 2px;
             border-radius: 6px;
@@ -170,6 +173,7 @@
         .btn-sm {
             padding: 8px 16px;
             font-size: 0.95rem;
+            color: white;
         }
         .btn-bookmark {
             background: linear-gradient(45deg, #ffca28, #ffb300);
@@ -224,7 +228,7 @@
             margin-bottom: 15px;
         }
         .article-card a {
-            color: #ff7e5f;
+            color: white;
             text-decoration: none;
             font-weight: 500;
             transition: color 0.3s ease;
@@ -399,7 +403,8 @@
                     <h2>{{ article.title }}</h2>
                     <p>{{ article.description }}</p>
                     <div class="d-flex gap-2">
-                        <a href="{{ article.link }}" target="_blank" class="btn btn-outline-primary btn-sm">Read More</a>
+                   <a href="{{ article.link }}" class="btn btn-primary btn-sm" target="_blank">Read More</a>
+
                         <button class="btn btn-bookmark bookmark-btn" style="display: none;"
                                 data-title="{{ article.title }}"
                                 data-description="{{ article.description|slice:':100' }}"

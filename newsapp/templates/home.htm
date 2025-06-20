@@ -89,14 +89,15 @@
             position: absolute;
             right: 0;
             top: 100%;
-            background: linear-gradient(135deg, #ffca28, #ffb300);
-            color: white;
+            background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+            color: #ffffff;
             border-radius: 8px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
             display: none;
             min-width: 180px;
             z-index: 1000;
             animation: slideDown 0.3s ease-in-out;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .dropdown:hover .dropdown-menu {
@@ -107,14 +108,15 @@
             display: block;
             padding: 12px 20px;
             text-decoration: none;
-            color: white;
+            color: #ffffff;
             font-weight: 400;
-            transition: background 0.3s ease, padding-left 0.3s ease;
+            transition: background 0.3s ease, padding-left 0.3s ease, color 0.3s ease;
         }
 
         .dropdown-menu a:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.2);
             padding-left: 25px;
+            color: #fff2e6;
         }
 
         @keyframes slideDown {
@@ -334,9 +336,94 @@
             animation: fadeIn 0.5s ease-in-out;
         }
 
-        @keyframes fadeIn hull {
+        @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
+        }
+
+        /* Live News Section */
+        .live-news-section {
+            margin-top: 40px;
+            position: relative;
+        }
+
+        .breaking-news-banner {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .live-news-player {
+            position: relative;
+            border-radius: 0 0 8px 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .live-news-player iframe {
+            width: 100%;
+            height: 400px;
+            border: none;
+        }
+
+        .live-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #ff0000;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .live-badge::before {
+            content: '•';
+            color: white;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+
+        .channel-selector {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+        }
+
+        .channel-selector select {
+            background: linear-gradient(45deg, #ffca28, #ffb300);
+            color: black;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .channel-selector select:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .channel-selector select:focus {
+            outline: none;
+            box-shadow: 0 0 8px rgba(255, 126, 95, 0.2);
         }
     </style>
 </head>
@@ -361,7 +448,7 @@
                 </div>
             </div>
             <button onclick="getLocation()" class="btn">Nearby News</button>
-            <button onclick="startVoice()" class="btn">Ask Me</button>
+            <button onclick="toggleVoice()" class="btn" id="voiceBtn" >Ask Me</button>
             <a href="{% url 'country_list' %}" class="btn">Explore</a>
             <!-- Login/Signup Button -->
             <button class="btn btn-primary" id="login-btn" data-bs-toggle="modal" data-bs-target="#authModal">Login/Signup</button>
@@ -417,6 +504,24 @@
         <div class="mt-4">
             <a href="{% url 'country_list' %}" class="btn btn-primary btn-lg m-2">🌍 Explore Country News</a>
             <a href="{% url 'college_news' %}" class="btn btn-success btn-lg m-2">🎓 Explore College News</a>
+        </div>
+        <!-- Live News Section -->
+        <div class="live-news-section">
+            <div class="breaking-news-banner">Breaking News</div>
+            <div class="live-news-player">
+                <div class="live-badge">
+                    <span>LIVE</span>
+                    <span id="current-time"></span>
+                </div>
+                <div class="channel-selector">
+                    <select id="channel-select" onchange="changeChannel()">
+                        <option value="https://www.youtube.com/embed/ICepqqyuqA0?si=6AFmqHq7J8JIGrb2&autoplay=1&mute=1" selected>NDTV 24x7</option>
+                        <option value="https://www.youtube.com/embed/wAGQ7M0Ce9Q?si=LAw67cLW7ZTLwl3U&autoplay=1&mute=1">Sun News</option>
+                        <option value="https://www.youtube.com/embed/yC7Upravj24?si=G2eOaIVpZwLOLaw3&autoplay=1&mute=1">Times Now</option>
+                    </select>
+                </div>
+                <iframe id="live-stream" src="https://www.youtube.com/embed/ICepqqyuqA0?si=6AFmqHq7J8JIGrb2&autoplay=1&mute=1" allowfullscreen></iframe>
+            </div>
         </div>
     </div>
 
@@ -523,7 +628,7 @@
                 if (logoutLink) {
                     logoutLink.onclick = () => {
                         firebase.auth().signOut().then(() => {
-                            location.reload(); // Refresh after logout
+                            location.reload();
                         });
                     };
                 }
@@ -548,10 +653,8 @@
                 const image = button.dataset.image;
                 const url = button.dataset.url;
 
-                // Initialize Firestore
                 const db = firebase.firestore();
 
-                // Store bookmark in Firestore under user's UID
                 db.collection('bookmarks')
                     .doc(user.uid)
                     .collection('articles')
@@ -564,7 +667,7 @@
                     })
                     .then(() => {
                         alert("Article bookmarked successfully!");
-                        button.disabled = true; // Prevent multiple bookmarks
+                        button.disabled = true;
                         button.textContent = "Bookmarked";
                     })
                     .catch(error => {
@@ -583,7 +686,7 @@
 
             document.getElementById('authModalLabel').innerText = isSignup ? "Signup" : "Login";
             document.getElementById('auth-submit-btn').innerText = isSignup ? "Signup" : "Login";
-            document.getElementById('auth-error-msg').textContent = '';  // Clear old messages
+            document.getElementById('auth-error-msg').textContent = '';
 
             this.innerHTML = isSignup
                 ? ' <a href="#">Login</a>'
@@ -648,128 +751,183 @@
                 header.classList.remove('scrolled');
             }
         });
+
+        // Live News Channel Switcher
+        function changeChannel() {
+            const select = document.getElementById('channel-select');
+            const iframe = document.getElementById('live-stream');
+            iframe.src = select.value; // Value already includes autoplay=1&mute=1
+        }
+
+        // Update Current Time for LIVE Badge
+        function updateTime() {
+            const timeElement = document.getElementById('current-time');
+            const now = new Date();
+            timeElement.textContent = now.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit',
+                hour12: true 
+            });
+        }
+
+        setInterval(updateTime, 1000);
+        updateTime();
     </script>
-    <script>
-        function startVoice() {
-            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-            recognition.lang = 'en-US';
-        
-            recognition.onresult = function(event) {
-                const query = event.results[0][0].transcript.toLowerCase();
-                console.log("You said:", query);
-        
-                if (query.includes("college news") || query.includes("eshwar")) {
-                    fetch('/college-news-json/')
-                    .then(res => res.json())
-                    .then(data => {
-                      if (data.length === 0) {
-                        speakNews("Sorry, there are no latest updates from Eshwar right now.");
-                      } else {
-                        const headlines = data.slice(0, 3).map(d => d.text.replace(/https?:\/\/\S+/g, '')).join('. ');
-                        speakNews("Here are the latest updates from Eshwar: " + headlines);
-                      }
-                    });
-                } else if (query.includes("news")) {
-                    fetch('/general_news_json/')  // You should expose this endpoint if not already
-                        .then(res => res.json())
-                        .then(data => {
-                            if (data.length === 0) {
-                                speakNews("Sorry, no general news is available right now.");
-                                return;
-                            }
-                            const headlines = data.slice(0, 3).map(d => d.text).join('. ');
-                            speakNews("Here are the latest updates from Eshwar: " + headlines);                        });
-                } else {
-                    speakNews("Please say 'news' or 'college news' to hear updates.");
-                }
-            };
-        
-            recognition.onerror = function(event) {
-                speakNews("Sorry, I couldn't hear you. Please try again.");
-            };
-        
+   <script>
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const recognition = SpeechRecognition ? new SpeechRecognition() : null;
+recognition.continuous = false;
+recognition.lang = 'en-US';
+
+let isListening = false;
+let isSpeaking = false;
+
+function speak(text) {
+    if (!window.speechSynthesis) {
+        console.error("SpeechSynthesis not supported in this browser.");
+        return;
+    }
+
+    // Stop any ongoing speech
+    window.speechSynthesis.cancel();
+    console.log("Speech synthesis cancelled before new utterance");
+
+    const synth = window.speechSynthesis;
+    const utterance = new SpeechSynthesisUtterance(text);
+    
+    utterance.onstart = () => {
+        isSpeaking = true;
+        console.log("Speech started:", text);
+    };
+    
+    utterance.onend = () => {
+        isSpeaking = false;
+        console.log("Speech ended");
+    };
+    
+    utterance.onerror = (event) => {
+        isSpeaking = false;
+        console.error("Speech synthesis error:", event.error);
+    };
+
+    try {
+        synth.speak(utterance);
+        console.log("Speaking:", text);
+    } catch (error) {
+        console.error("Error initiating speech:", error);
+    }
+}
+
+function fetchAndSpeakCollegeNews() {
+    fetch('/college-news-json/')
+        .then(response => response.json())
+        .then(data => {
+            if (data.length === 0) {
+                speak("Sorry, there are no latest updates from Eshwar right now.");
+                return;
+            }
+            const intro = "Here are the latest updates from Eshwar.";
+            const newsList = data.slice(0, 3).map((item, index) => `News ${index + 1}: ${item.text.replace(/https?:\/\/\S+/g, '')}`).join(". ");
+            speak(`${intro} ${newsList}`);
+        })
+        .catch(error => {
+            console.error("Error fetching college news:", error);
+            speak("Sorry, I couldn't fetch the college news.");
+        });
+}
+
+function fetchAndSpeakGeneralNews() {
+    fetch('/general-news-json/')
+        .then(response => response.json())
+        .then(data => {
+            if (data.length === 0) {
+                speak("Sorry, no general news is available right now.");
+                return;
+            }
+            const intro = "Here are the latest headlines.";
+            const newsList = data.slice(0, 3).map((item, index) => `News ${index + 1}: ${item.text}`).join(". ");
+            speak(`${intro} ${newsList}`);
+        })
+        .catch(error => {
+            console.error("Error fetching general news:", error);
+            speak("Sorry, I couldn't fetch the general news.");
+        });
+}
+
+if (recognition) {
+    recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript.toLowerCase();
+        console.log("You said:", transcript);
+
+        if (transcript.includes("college news") || transcript.includes("eshwar")) {
+            fetchAndSpeakCollegeNews();
+        } else if (transcript.includes("news")) {
+            fetchAndSpeakGeneralNews();
+        } else {
+            speak("Sorry, I didn't understand. Please say college news or general news.");
+        }
+    };
+
+    recognition.onerror = (event) => {
+        console.error("Speech recognition error:", event.error);
+        speak("There was an error recognizing your speech.");
+        stopRecognition();
+    };
+
+    recognition.onend = () => {
+        console.log("Speech recognition ended");
+        if (isListening) {
+            stopRecognition();
+        }
+    };
+} else {
+    console.warn("SpeechRecognition not supported in this browser.");
+    document.getElementById("voiceBtn").disabled = true;
+    document.getElementById("voiceBtn").textContent = "Voice Not Supported";
+}
+
+function toggleVoice() {
+    const btn = document.getElementById("voiceBtn");
+
+    if (!recognition) {
+        alert("Speech recognition is not supported in this browser.");
+        return;
+    }
+
+    if (!isListening) {
+        try {
             recognition.start();
+            isListening = true;
+            btn.textContent = "Stop Listening";
+            speak("Listening. Say 'college news' or 'news' to get updates.");
+            console.log("Speech recognition started");
+        } catch (error) {
+            console.error("Error starting recognition:", error);
+            stopRecognition();
         }
-        function speakNews(text) {
-            const synth = window.speechSynthesis;
-            const utterance = new SpeechSynthesisUtterance(text);
-            synth.speak(utterance);
-        }
-        </script>
-        <script>
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            const recognition = new SpeechRecognition();
-            recognition.continuous = false;
-            recognition.lang = 'en-US';
-            
-            function speak(text) {
-                const synth = window.speechSynthesis;
-                const utterance = new SpeechSynthesisUtterance(text);
-                synth.speak(utterance);
-            }
-            
-            function fetchAndSpeakCollegeNews() {
-                fetch('/college-news-json/')
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.length === 0) {
-                            speak("Sorry, I couldn't find any college news.");
-                            return;
-                        }
-            
-                        const intro = "Here are the latest updates from Eshwar.";
-                        const newsList = data.map((title, index) => `News ${index + 1}: ${title}`).join(". ");
-                        speak(`${intro} ${newsList}`);
-                    })
-                    .catch(error => {
-                        console.error("Error fetching college news:", error);
-                        speak("Sorry, I couldn't fetch the college news.");
-                    });
-            }
-            
-            function fetchAndSpeakGeneralNews() {
-                fetch('/general-news-json/')
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.length === 0) {
-                            speak("Sorry, I couldn't find any general news.");
-                            return;
-                        }
-            
-                        const intro = "Here are the latest headlines.";
-                        const newsList = data.map((item, index) => `News ${index + 1}: ${item.text}`).join(". ");
-                        speak(`${intro} ${newsList}`);
-                    })
-                    .catch(error => {
-                        console.error("Error fetching general news:", error);
-                        speak("Sorry, I couldn't fetch the general news.");
-                    });
-            }
-            
-            // Start recognition
-            function startListening() {
-                recognition.start();
-                speak("Listening. Say 'college news' or 'news' to get updates.");
-            }
-            
-            recognition.onresult = (event) => {
-                const transcript = event.results[0][0].transcript.toLowerCase();
-                console.log("You said:", transcript);
-            
-                if (transcript.includes("college news")) {
-                    fetchAndSpeakCollegeNews();
-                } else if (transcript.includes("news")) {
-                    fetchAndSpeakGeneralNews();
-                } else {
-                    speak("Sorry, I didn't understand. Please say college news or general news.");
-                }
-            };
-            
-            recognition.onerror = (event) => {
-                console.error("Speech recognition error:", event.error);
-                speak("There was an error recognizing your speech.");
-            };
-            </script>
-            
+    } else {
+        stopRecognition();
+    }
+}
+
+function stopRecognition() {
+    if (recognition && isListening) {
+        recognition.stop();
+        console.log("Speech recognition stopped");
+    }
+
+    // Stop any ongoing speech
+    if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+        console.log("Speech synthesis stopped");
+    }
+
+    isListening = false;
+    isSpeaking = false;
+    document.getElementById("voiceBtn").textContent = "Ask Me";
+}
+</script>
+
 </body>
 </html>

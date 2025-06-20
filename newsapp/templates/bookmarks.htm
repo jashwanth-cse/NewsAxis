@@ -85,18 +85,19 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
-        .dropdown-menu {
+      .dropdown-menu {
             position: absolute;
             right: 0;
             top: 100%;
-            background: linear-gradient(135deg, #ffca28, #ffb300);
-            color: white;
+            background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+            color: #ffffff;
             border-radius: 8px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
             display: none;
             min-width: 180px;
             z-index: 1000;
             animation: slideDown 0.3s ease-in-out;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .dropdown:hover .dropdown-menu {
@@ -107,16 +108,17 @@
             display: block;
             padding: 12px 20px;
             text-decoration: none;
-            color: white;
+            color: #ffffff;
             font-weight: 400;
-            transition: background 0.3s ease, padding-left 0.3s ease;
+            transition: background 0.3s ease, padding-left 0.3s ease, color 0.3s ease;
         }
 
         .dropdown-menu a:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.2);
             padding-left: 25px;
+            color: #fff2e6;
         }
-
+        }
         @keyframes slideDown {
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }

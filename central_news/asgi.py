@@ -8,6 +8,10 @@ https://docs.djangoproject.com/en/5.1/howto/deployment/asgi/
 """
 
 import os
+from decouple import config  # <-- Add this line
+
+# Set the Google credentials path securely
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = config("GOOGLE_APPLICATION_CREDENTIALS")
 
 from django.core.asgi import get_asgi_application
 
